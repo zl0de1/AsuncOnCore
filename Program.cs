@@ -15,14 +15,14 @@ namespace AsuncOnCore
             int[] h = new int[] { 8, 8, 9, 10, 11, 12, 13, 14, 14, 14, 14, 13, 12, 11, 10, 9, 8, 8 };
             Random rnd = new Random();
             Console.SetWindowSize(120, 30);
-            //Console.CursorVisible = false;           
+            Console.CursorVisible = false;           
             CheckKeyAsunc();
    
             while (!Terminate & progress < 100)
             {
-                rnd_point = rnd.Next(2, (w.GetLength(0)-1));
+                rnd_point = rnd.Next(4, (w.GetLength(0)-1));
                 await GameAsunc(w, h);
-                //await Task.Delay(1000);           
+                await Task.Delay(2000);           
                 if(progress >= 100)
                 {
                     Console.WriteLine("Генератор починен");
@@ -51,32 +51,46 @@ namespace AsuncOnCore
         {
             for (int i = 0; i < w.GetLength(0); i++)
             {
+                Console.Clear();
+                for (int a = 0; a < w.GetLength(0); a++) 
+                {
+                    Console.SetCursorPosition(w[a], h[a]);
+                    Console.Write(".");
+                }
+                Console.SetCursorPosition(w[rnd_point], h[rnd_point]);
+                Console.Write("o");
+                Console.SetCursorPosition(0, 0);
+                Console.Write("Progress: {0}", progress);
+
                 if (!Terminate)
                 {
-                    Console.WriteLine("{0}: {1},{2}  Rnd p: {3}  {4},{5} PRogRess: {6}", i, w[i], h[i], rnd_point, w[rnd_point], h[rnd_point], progress);
-                    await Task.Delay(200);
+                    Console.SetCursorPosition(w[i], h[i]);
+                    Console.Write("x");
+                    await Task.Delay(100);
                 }
                 else
                 {
                     if ((--i) == rnd_point)
                     {
+                        Console.SetCursorPosition(60, 11);
+                        Console.Write("ПОПАЛ");
                         progress += 25;
-                        Console.WriteLine("{0}={1}? win", i, rnd_point);
                         break;
                     }
                     else
                     {
+                        Console.SetCursorPosition(61, 11);
+                        Console.Write("МИМО");
                         progress -= 25;
-                        Console.WriteLine("{0}={1}? loose", i, rnd_point);
                         break;
                     }
                 }
             }
             if (!Terminate)
             {
+                progress -= 25;
                 Console.WriteLine("Бум генератора");
             }
-            //Terminate = true;
         }
 
         static async Task CheckKey()
@@ -85,10 +99,14 @@ namespace AsuncOnCore
             {
                 if (Console.ReadKey(true).Key == ConsoleKey.Spacebar)
                 {
-                    Console.WriteLine("CheckKey");
+                    //Console.WriteLine("CheckKey");
                     Terminate = true;
                 }
             } while (true);
+        }
+        static async Task ProgressLine()
+        {
+
         }
         static bool WinOrLoos(int i)
         {
