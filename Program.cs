@@ -17,12 +17,14 @@ namespace AsuncOnCore
             Console.SetWindowSize(120, 30);
             Console.CursorVisible = false;           
             CheckKeyAsunc();
-   
+            
+
             while (!Terminate & progress < 100)
             {
                 rnd_point = rnd.Next(4, (w.GetLength(0)-1));
+                
                 await GameAsunc(w, h);
-                await Task.Delay(2000);           
+                await Task.Delay(1500);           
                 if(progress >= 100)
                 {
                     Console.WriteLine("Генератор починен");
@@ -34,7 +36,6 @@ namespace AsuncOnCore
                     Terminate = false;
                 }
             }
-
             Console.WriteLine("End game");
             Console.ReadKey();
         }
@@ -46,9 +47,14 @@ namespace AsuncOnCore
         {
             await Task.Run(() => CheckKey());
         }
+        static async Task ProgressLineAsunc()
+        {
+            await Task.Run(() => ProgressLine());
+        }
 
         static async Task Game(int[] w, int[] h)
         {
+            UI ui = new UI();
             for (int i = 0; i < w.GetLength(0); i++)
             {
                 Console.Clear();
@@ -59,8 +65,18 @@ namespace AsuncOnCore
                 }
                 Console.SetCursorPosition(w[rnd_point], h[rnd_point]);
                 Console.Write("o");
+                Console.SetCursorPosition(60, 11);
+                Console.Write("SPACE");
+
                 Console.SetCursorPosition(0, 0);
                 Console.Write("Progress: {0}", progress);
+                ui.Draw("ProgressBar");
+                for (int c = 0; c < (progress/5); c++)
+                {
+                    Console.SetCursorPosition((52+c), 18);
+                    Console.Write("■");
+                }
+                //ProgressLineAsunc();
 
                 if (!Terminate)
                 {
@@ -72,16 +88,21 @@ namespace AsuncOnCore
                 {
                     if ((--i) == rnd_point)
                     {
+                        progress += 50;
+                        Console.SetCursorPosition(60, 11);
+                        Console.Write("     ");
                         Console.SetCursorPosition(60, 11);
                         Console.Write("ПОПАЛ");
-                        progress += 25;
+                        ui.Draw("100");
                         break;
                     }
                     else
                     {
+                        progress -= 25;
+                        Console.SetCursorPosition(60, 11);
+                        Console.Write("     ");
                         Console.SetCursorPosition(61, 11);
                         Console.Write("МИМО");
-                        progress -= 25;
                         break;
                     }
                 }
@@ -93,28 +114,25 @@ namespace AsuncOnCore
             }
         }
 
-        static async Task CheckKey()
+        static void CheckKey()
         {
-            do
+            while(progress < 100)
             {
                 if (Console.ReadKey(true).Key == ConsoleKey.Spacebar)
                 {
-                    //Console.WriteLine("CheckKey");
+                    Console.WriteLine("CheckKey");
                     Terminate = true;
                 }
-            } while (true);
+            } 
         }
         static async Task ProgressLine()
         {
-
-        }
-        static bool WinOrLoos(int i)
-        {
-            if(i == rnd_point)
+            UI ui = new UI();
+            do
             {
-                return true;
-            }
-            else { return false; }
+                await Task.Delay(200);
+                
+            } while (progress < 100);
         }
     }
 }
