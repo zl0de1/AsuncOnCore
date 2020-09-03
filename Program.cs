@@ -20,13 +20,14 @@ namespace AsuncOnCore
    
             while (!Terminate & progress < 100)
             {
-                rnd_point = rnd.Next(2, w.GetLength(0));
+                rnd_point = rnd.Next(2, (w.GetLength(0)-1));
                 await GameAsunc(w, h);
-                await Task.Delay(1000);           
+                //await Task.Delay(1000);           
                 if(progress >= 100)
                 {
                     Console.WriteLine("Генератор починен");
                     Terminate = true;
+                    break;
                 }
                 else if (progress < 100)
                 {
@@ -52,25 +53,32 @@ namespace AsuncOnCore
             {
                 if (!Terminate)
                 {
-                    Console.WriteLine("{0}: {1},{2}  Rnd p:{3}: {4},{5}", i, w[i], h[i], rnd_point, w[rnd_point], h[rnd_point]);
-                    await Task.Delay(500);
+                    Console.WriteLine("{0}: {1},{2}  Rnd p: {3}  {4},{5} PRogRess: {6}", i, w[i], h[i], rnd_point, w[rnd_point], h[rnd_point], progress);
+                    await Task.Delay(200);
                 }
                 else
                 {
                     if ((--i) == rnd_point)
                     {
+                        progress += 25;
                         Console.WriteLine("{0}={1}? win", i, rnd_point);
                         break;
                     }
                     else
                     {
+                        progress -= 25;
                         Console.WriteLine("{0}={1}? loose", i, rnd_point);
                         break;
                     }
                 }
             }
+            if (!Terminate)
+            {
+                Console.WriteLine("Бум генератора");
+            }
             //Terminate = true;
         }
+
         static async Task CheckKey()
         {
             do
