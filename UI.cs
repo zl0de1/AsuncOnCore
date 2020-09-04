@@ -24,8 +24,7 @@ namespace AsuncOnCore
                         Console.Write(Add100[i] + "\n");
                     }
                     break;
-                case "ProgressBar":
-                    
+                case "ProgressBar":                 
                     for (int i = 0; i < ProgressBarSprite.GetLength(0); i++)
                     {
                         Console.SetCursorPosition(51, (17+i));

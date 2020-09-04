@@ -4,7 +4,5 @@ namespace AsuncOnCore
 {
     class Sprite
     {
-
-        
     }
 }
