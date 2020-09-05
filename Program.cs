@@ -20,17 +20,15 @@ namespace AsuncOnCore
             Console.CursorVisible = false;           
             CheckKeyAsunc();
             
-
+            //сделать так чтоб изменение прогрес гейм было только тут, через возвращение?
             while (!Terminate)
             {
                 rnd_point = rnd.Next(4, (w.GetLength(0)-1));
-
                 game.Progress += await GameAsunc(w, h, game.Progress);
-                await Task.Delay(1500);           
+                          
                 if(game.Progress >= 100)
                 {
                     Terminate = true;
-                    
                     Console.SetCursorPosition(0, 0);
                     Console.WriteLine("Генератор починен");
                     CheckBar(game.Progress);
@@ -38,6 +36,8 @@ namespace AsuncOnCore
                 }
                 else if (game.Progress < 100)
                 {
+                    //тут чекпрогрес бар
+                    await Task.Delay(1000);
                     Terminate = false;
                 }
             }
@@ -100,6 +100,7 @@ namespace AsuncOnCore
                         Console.Write("ПОПАЛ");
                         ui.Draw("100");
                         CheckBar(progress+25);
+                        Console.Beep();
                         return game.Progress;
                         //break;
                     }
@@ -134,7 +135,7 @@ namespace AsuncOnCore
             {
                 if (Console.ReadKey(true).Key == ConsoleKey.Spacebar)
                 {
-                    Console.WriteLine("CheckKey");
+                    //Console.WriteLine("CheckKey");
                     Terminate = true;
                 }
             } 
