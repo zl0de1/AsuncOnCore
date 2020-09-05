@@ -7,7 +7,6 @@ namespace AsuncOnCore
     class Program
     {
         public static bool Terminate = false;
-        public static int rnd_point = 0;
 
         static async Task Main()
         {
@@ -15,7 +14,7 @@ namespace AsuncOnCore
             int[] h = new int[] { 8, 8, 9, 10, 11, 12, 13, 14, 14, 14, 14, 13, 12, 11, 10, 9, 8, 8 };
             Game game = new Game();
             UI ui = new UI();
-            game.Progress = -1;
+            game.Progress = 0;
             Random rnd = new Random();
             Console.SetWindowSize(120, 30);
             Console.CursorVisible = false;           
@@ -25,11 +24,8 @@ namespace AsuncOnCore
             //сделать так чтоб изменение прогрес гейм было только тут, через возвращение?
             while (!Terminate)
             {
-                rnd_point = rnd.Next(4, (w.GetLength(0)-1));
-                game.Progress = await GameAsunc(w, h, game.Progress);
-
-                Console.SetCursorPosition(0, 0);
-                Console.Write("Progress: {0}", game.Progress);
+                int rnd_point = rnd.Next(4, (w.GetLength(0)-1));
+                game.Progress = await GameAsunc(w, h, rnd_point, game.Progress);
 
                 ui.Draw("ProgressBar");
                 CheckBar(game.Progress);
@@ -52,21 +48,17 @@ namespace AsuncOnCore
             Console.WriteLine("End game");
             Console.ReadKey();
         }
-        static async Task<int> GameAsunc(int[] w, int[] h, int progress)
+        static async Task<int> GameAsunc(int[] w, int[] h, int rnd_point, int progress)
         {
-            int progress_ = await Task.Run(() => Game(w, h, progress));
+            int progress_ = await Task.Run(() => Game(w, h, rnd_point, progress));
             return progress_;
         }
         static async Task CheckKeyAsunc()
         {
             await Task.Run(() => CheckKey());
         }
-        static async Task ProgressLineAsunc(int progress)
-        {
-            await Task.Run(() => ProgressLine(progress));
-        }
 
-        static async Task<int> Game(int[] w, int[] h, int progress)
+        static async Task<int> Game(int[] w, int[] h, int rnd_point, int progress)
         {
             UI ui = new UI();
             for (int i = 0; i < w.GetLength(0); i++)
@@ -141,15 +133,6 @@ namespace AsuncOnCore
                     Console.Write("■");
                 }
             }
-        }
-        static async Task ProgressLine(int progress)
-        {
-            UI ui = new UI();
-            do
-            {
-                await Task.Delay(200);
-                
-            } while (progress < 100);
         }
     }
 }
