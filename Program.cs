@@ -8,25 +8,33 @@ namespace AsuncOnCore
     {
         public static bool Terminate = false;
         public static int rnd_point = 0;
-        //public static int progress = 0;
+
         static async Task Main()
         {
             int[] w = new int[] { 63, 65, 66, 67, 67, 67, 66, 65, 63, 61, 59, 58, 57, 57, 57, 58, 59, 61 };
             int[] h = new int[] { 8, 8, 9, 10, 11, 12, 13, 14, 14, 14, 14, 13, 12, 11, 10, 9, 8, 8 };
             Game game = new Game();
-            game.Progress = 0;
+            UI ui = new UI();
+            game.Progress = -1;
             Random rnd = new Random();
             Console.SetWindowSize(120, 30);
             Console.CursorVisible = false;           
             CheckKeyAsunc();
-            
+            ui.Draw("ProgressBar");
+            CheckBar(game.Progress);
             //сделать так чтоб изменение прогрес гейм было только тут, через возвращение?
             while (!Terminate)
             {
                 rnd_point = rnd.Next(4, (w.GetLength(0)-1));
-                game.Progress += await GameAsunc(w, h, game.Progress);
-                          
-                if(game.Progress >= 100)
+                game.Progress = await GameAsunc(w, h, game.Progress);
+
+                Console.SetCursorPosition(0, 0);
+                Console.Write("Progress: {0}", game.Progress);
+
+                ui.Draw("ProgressBar");
+                CheckBar(game.Progress);
+
+                if (game.Progress >= 100)
                 {
                     Terminate = true;
                     Console.SetCursorPosition(0, 0);
@@ -36,8 +44,7 @@ namespace AsuncOnCore
                 }
                 else if (game.Progress < 100)
                 {
-                    //тут чекпрогрес бар
-                    await Task.Delay(1000);
+                    await Task.Delay(700);
                     Terminate = false;
                 }
             }
@@ -62,10 +69,9 @@ namespace AsuncOnCore
         static async Task<int> Game(int[] w, int[] h, int progress)
         {
             UI ui = new UI();
-            Game game = new Game();
             for (int i = 0; i < w.GetLength(0); i++)
             {
-                Console.Clear();
+                //Console.Clear();
                 for (int a = 0; a < w.GetLength(0); a++) 
                 {
                     Console.SetCursorPosition(w[a], h[a]);
@@ -75,13 +81,6 @@ namespace AsuncOnCore
                 Console.Write("o");
                 Console.SetCursorPosition(60, 11);
                 Console.Write("SPACE");
-
-                Console.SetCursorPosition(0, 0);
-                Console.Write("Progress: {0}", progress);
-                ui.Draw("ProgressBar");
-                CheckBar(progress);
-                //ProgressLineAsunc();
-
                 if (!Terminate)
                 {
                     Console.SetCursorPosition(w[i], h[i]);
@@ -92,41 +91,31 @@ namespace AsuncOnCore
                 {
                     if ((--i) == rnd_point)
                     {
-                        game.Progress += 25;
-                        //if (progress > 100) { progress = 100; }
-                        Console.SetCursorPosition(60, 11);
-                        Console.Write("     ");
+                        progress += 10;
                         Console.SetCursorPosition(60, 11);
                         Console.Write("ПОПАЛ");
                         ui.Draw("100");
-                        CheckBar(progress+25);
                         Console.Beep();
-                        return game.Progress;
+                        return progress;
                         //break;
                     }
                     else
                     {
-                        game.Progress -= 25;
-                        //if (progress<0) { progress = 0; }
+                        progress -= 25;
                         Console.SetCursorPosition(60, 11);
-                        Console.Write("     ");
-                        Console.SetCursorPosition(61, 11);
-                        Console.Write("МИМО");
-                        CheckBar(progress-25);
-                        return game.Progress;
+                        Console.Write("МИМО ");
+                        return progress;
                         //break;
                     }
                 }
             }
             if (!Terminate)
             {
-                game.Progress -= 25;
-                //if (progress < 0) { progress = 0; }
+                progress -= 25;
                 Console.WriteLine("Бум генератора");
-                CheckBar(game.Progress-25);
-                return game.Progress;
+                return progress;
             }
-            return game.Progress;
+            return progress;
         }
 
         static void CheckKey()
@@ -142,6 +131,8 @@ namespace AsuncOnCore
         }
         static void CheckBar(int progress)
         {
+            Console.SetCursorPosition((70), 16);
+            Console.Write(progress + "% ");
             for (int c = 0; (c < progress / 5); c++)
             {       
                 if ((progress / 5) <= 20)

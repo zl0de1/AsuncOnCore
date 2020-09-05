@@ -8,11 +8,16 @@ namespace AsuncOnCore
     {
         private int progress;
         public Game() { }
+
         public int Progress
         {
             get { return progress; }
-            set  { progress = value; } 
-            
+            set  
+            {
+                if (value < 0) { progress = 0; }
+                else if (value > 100) { progress = 100; }
+                else { progress = value; }
+            } 
         }
     }
 }
