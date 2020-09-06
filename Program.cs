@@ -43,7 +43,11 @@ namespace AsuncOnCore
                         Console.WriteLine("Генератор починен");
                         game.GeneratorCount--;
                         CheckBar(game.GeneratorCount, game.Progress);
-                        await Task.Delay(2000); 
+                        await Task.Delay(30);
+                        Console.Beep();
+                        await Task.Delay(30);
+                        Console.Beep();
+                        await Task.Delay(1800);
                         Terminate = false;
                         break;
                     }
@@ -129,6 +133,7 @@ namespace AsuncOnCore
         }
         static void CheckBar(int generatorCount, int progress)
         {
+            UI ui = new UI();
             Console.SetCursorPosition(70, 16);
             Console.Write(progress + "%  ");
             for (int c = 0; (c < progress / 5); c++)
@@ -139,9 +144,9 @@ namespace AsuncOnCore
                     Console.Write("■");
                 }
             }
-            Console.SetCursorPosition(10, 25);
-            Console.Write("Генераторов починить: " + generatorCount);
-
+            Console.SetCursorPosition(10, 23);
+            Console.Write("Генераторов починить: " + generatorCount + "\n  -------------------------------");
+            ui.Draw("UserIcon");
         }
     }
 }
