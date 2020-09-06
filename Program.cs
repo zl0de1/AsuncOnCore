@@ -15,34 +15,44 @@ namespace AsuncOnCore
             Game game = new Game();
             UI ui = new UI();
             Random rnd = new Random();
-            game.Progress = 0;
+            
             Console.SetWindowSize(120, 30);
-            Console.CursorVisible = false;   
-                       
-            ui.Draw("ProgressBar");
-            CheckBar(game.Progress);
-            while (!Terminate)
+            Console.CursorVisible = false;
+
+            game.Progress = 0;
+            game.GeneratorCount = 5;
+
+            while (game.GeneratorCount > 0)
             {
-                int rnd_point = rnd.Next(4, (w.GetLength(0)-1));
-                CheckKeyAsunc();
-                game.Progress = await GameAsunc(w, h, rnd_point, game.Progress);
-
+                game.Progress = 0;
                 ui.Draw("ProgressBar");
-                CheckBar(game.Progress);
+                CheckBar(game.GeneratorCount, game.Progress);
+                while (!Terminate)
+                {
+                    int rnd_point = rnd.Next(4, (w.GetLength(0) - 1));
+                    CheckKeyAsunc();
+                    game.Progress = await GameAsunc(w, h, rnd_point, game.Progress);
 
-                if (game.Progress >= 100)
-                {
-                    Terminate = true;
-                    Console.SetCursorPosition(0, 0);
-                    Console.WriteLine("Генератор починен");
-                    CheckBar(game.Progress);
-                    break;
-                }
-                else if (game.Progress < 100)
-                {
-                    await Task.Delay(700);
-                    Terminate = false;
-                }
+                    ui.Draw("ProgressBar");
+                    CheckBar(game.GeneratorCount, game.Progress);
+
+                    if (game.Progress >= 100)
+                    {
+                        Terminate = true;
+                        Console.SetCursorPosition(0, 0);
+                        Console.WriteLine("Генератор починен");
+                        game.GeneratorCount--;
+                        CheckBar(game.GeneratorCount, game.Progress);
+                        await Task.Delay(2000); 
+                        Terminate = false;
+                        break;
+                    }
+                    else if (game.Progress < 100)
+                    {
+                        await Task.Delay(700);
+                        Terminate = false;
+                    }
+                }  
             }
             Console.SetCursorPosition(0, 5);
             Console.WriteLine("End game");
@@ -83,7 +93,7 @@ namespace AsuncOnCore
                 {
                     if ((--i) == rnd_point)
                     {
-                        progress += 100;
+                        progress += 10;
                         Console.SetCursorPosition(60, 11);
                         Console.Write("ПОПАЛ");
                         ui.Draw("100");
@@ -101,19 +111,14 @@ namespace AsuncOnCore
                     }
                 }
             }
-            if (!Terminate)
-            {
-                progress -= 25;
-                Console.WriteLine("Бум генератора");
-                return progress;
-            }
-            Console.WriteLine("ПРАИЗАШОЛ КАПУТ");
+            progress -= 25;
+            Console.WriteLine("Бум генератора");
             return progress;
         }
 
         static void CheckKey()
         {
-            while(!Terminate )
+            while(!Terminate)
             {
                 if (Console.ReadKey(true).Key == ConsoleKey.Spacebar)
                 {
@@ -122,10 +127,10 @@ namespace AsuncOnCore
                 }
             } 
         }
-        static void CheckBar(int progress)
+        static void CheckBar(int generatorCount, int progress)
         {
-            Console.SetCursorPosition((70), 16);
-            Console.Write(progress + "% ");
+            Console.SetCursorPosition(70, 16);
+            Console.Write(progress + "%  ");
             for (int c = 0; (c < progress / 5); c++)
             {       
                 if ((progress / 5) <= 20)
@@ -134,6 +139,9 @@ namespace AsuncOnCore
                     Console.Write("■");
                 }
             }
+            Console.SetCursorPosition(10, 25);
+            Console.Write("Генераторов починить: " + generatorCount);
+
         }
     }
 }
