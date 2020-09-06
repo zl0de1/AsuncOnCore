@@ -14,17 +14,17 @@ namespace AsuncOnCore
             int[] h = new int[] { 8, 8, 9, 10, 11, 12, 13, 14, 14, 14, 14, 13, 12, 11, 10, 9, 8, 8 };
             Game game = new Game();
             UI ui = new UI();
-            game.Progress = 0;
             Random rnd = new Random();
+            game.Progress = 0;
             Console.SetWindowSize(120, 30);
-            Console.CursorVisible = false;           
-            CheckKeyAsunc();
+            Console.CursorVisible = false;   
+                       
             ui.Draw("ProgressBar");
             CheckBar(game.Progress);
-            //сделать так чтоб изменение прогрес гейм было только тут, через возвращение?
             while (!Terminate)
             {
                 int rnd_point = rnd.Next(4, (w.GetLength(0)-1));
+                CheckKeyAsunc();
                 game.Progress = await GameAsunc(w, h, rnd_point, game.Progress);
 
                 ui.Draw("ProgressBar");
@@ -83,7 +83,7 @@ namespace AsuncOnCore
                 {
                     if ((--i) == rnd_point)
                     {
-                        progress += 10;
+                        progress += 100;
                         Console.SetCursorPosition(60, 11);
                         Console.Write("ПОПАЛ");
                         ui.Draw("100");
@@ -107,12 +107,13 @@ namespace AsuncOnCore
                 Console.WriteLine("Бум генератора");
                 return progress;
             }
+            Console.WriteLine("ПРАИЗАШОЛ КАПУТ");
             return progress;
         }
 
         static void CheckKey()
         {
-            while(true)
+            while(!Terminate )
             {
                 if (Console.ReadKey(true).Key == ConsoleKey.Spacebar)
                 {
