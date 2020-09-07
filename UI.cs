@@ -48,6 +48,24 @@ namespace AsuncOnCore
             }
         }
 
+        public void CheckBar(int generatorCount, int progress)
+        {
+            UI ui = new UI();
+            Console.SetCursorPosition(70, 16);
+            Console.Write(progress + "%  ");
+            for (int c = 0; (c < progress / 5); c++)
+            {
+                if ((progress / 5) <= 20)
+                {
+                    Console.SetCursorPosition((52 + c), 18);
+                    Console.Write("■");
+                }
+            }
+            Console.SetCursorPosition(10, 23);
+            Console.Write("Генераторов починить: " + generatorCount + "\n  -------------------------------");
+            ui.Draw("UserIcon");
+        }
+
         private static readonly string[] Add25 = new string[]
             {
             "        ■■■  ■■■",

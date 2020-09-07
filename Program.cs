@@ -26,7 +26,7 @@ namespace AsuncOnCore
             {
                 game.Progress = 0;
                 ui.Draw("ProgressBar");
-                CheckBar(game.GeneratorCount, game.Progress);
+                ui.CheckBar(game.GeneratorCount, game.Progress);
                 while (!Terminate)
                 {
                     int rnd_point = rnd.Next(4, (w.GetLength(0) - 1));
@@ -34,7 +34,7 @@ namespace AsuncOnCore
                     game.Progress = await GameAsunc(w, h, rnd_point, game.Progress);
 
                     ui.Draw("ProgressBar");
-                    CheckBar(game.GeneratorCount, game.Progress);
+                    ui.CheckBar(game.GeneratorCount, game.Progress);
 
                     if (game.Progress >= 100)
                     {
@@ -42,10 +42,10 @@ namespace AsuncOnCore
                         Console.SetCursorPosition(0, 0);
                         Console.WriteLine("Генератор починен");
                         game.GeneratorCount--;
-                        CheckBar(game.GeneratorCount, game.Progress);
-                        await Task.Delay(30);
+                        ui.CheckBar(game.GeneratorCount, game.Progress);
+                        await Task.Delay(20);
                         Console.Beep();
-                        await Task.Delay(30);
+                        await Task.Delay(20);
                         Console.Beep();
                         await Task.Delay(1800);
                         Terminate = false;
@@ -130,23 +130,6 @@ namespace AsuncOnCore
                     Terminate = true;
                 }
             } 
-        }
-        static void CheckBar(int generatorCount, int progress)
-        {
-            UI ui = new UI();
-            Console.SetCursorPosition(70, 16);
-            Console.Write(progress + "%  ");
-            for (int c = 0; (c < progress / 5); c++)
-            {       
-                if ((progress / 5) <= 20)
-                {
-                    Console.SetCursorPosition((52 + c), 18);
-                    Console.Write("■");
-                }
-            }
-            Console.SetCursorPosition(10, 23);
-            Console.Write("Генераторов починить: " + generatorCount + "\n  -------------------------------");
-            ui.Draw("UserIcon");
-        }
+        } 
     }
 }
