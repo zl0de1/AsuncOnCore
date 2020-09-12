@@ -1,9 +1,11 @@
 ﻿using System;
+using System.Threading;
 
 namespace AsuncOnCore
 {
     class UI
     {
+        static object locker = new object();
         //public Sprite sprite { get; set; }
         public UI() { }
 
@@ -13,18 +15,12 @@ namespace AsuncOnCore
             switch (SpriteName)
             {
                 case "25":
-                    Console.SetCursorPosition(0, 11);
-                    for (int i = 0; i < Add25.GetLength(0); i++)
-                    {
-                        Console.Write(Add25[i] + "\n");
-                    }
+                    Thread thr0 = new Thread(new ParameterizedThreadStart(DrawAddSprite));
+                    thr0.Start(Add25);
                     break;
                 case "100":
-                    Console.SetCursorPosition(0, 11);
-                    for (int i = 0; i < Add100.GetLength(0); i++)
-                    {
-                        Console.Write(Add100[i] + "\n");
-                    }
+                    Thread thr1 = new Thread(new ParameterizedThreadStart(DrawAddSprite));
+                    thr1.Start(Add100);
                     break;
                 case "ProgressBar":
                     Console.SetCursorPosition(0, 11);
@@ -48,6 +44,30 @@ namespace AsuncOnCore
             }
         }
 
+        private void DrawAddSprite(object sprite) 
+            //параметрезированный поток в качестве параметра 
+            //может принимать объект типа object, по мне так херь
+        {
+            string[] sprite_ = (string[])sprite;
+            Console.SetCursorPosition(0, 11);
+            for (int i = 0; i < sprite_.GetLength(0); i++)
+            {
+                Console.Write(sprite_[i] + "\n");
+                Thread.Sleep(90);
+            }
+            Thread.Sleep(400);
+            Console.SetCursorPosition(0, 11);
+            for (int i = 0; i < sprite_.GetLength(0); i++)
+            {
+                for (int n = 0; n < sprite_[i].Length; n++)
+                {
+                    Console.Write(" ");
+                }
+                Thread.Sleep(100);
+                Console.Write("\n");
+            }
+        }
+
         public void CheckBar(int generatorCount, int progress)
         {
             UI ui = new UI();
@@ -68,11 +88,9 @@ namespace AsuncOnCore
 
         private static readonly string[] Add25 = new string[]
             {
-            "        ■■■  ■■■",
-            "   ■      ■  ■  ",
-            " ■■■■■   ■   ■■■",
-            "   ■    ■      ■",
-            "        ■■■  ■■■",
+            "   ■    ■■■ ■■■ ■■■",
+            " ■■■■■  ■■■ ■ ■ ■ ■",
+            "   ■    ■■■ ■■■ ■■■",
             };
         private static readonly string[] Add100 = new string[]
             {

@@ -35,7 +35,7 @@ namespace AsuncOnCore
                 {
                     CheckKeyAsunc(); //??
                     int rnd_point = rnd.Next(4, (w.GetLength(0) - 1));
-                    user.Progress = await GameLogicAsunc(w, h, rnd_point, user.Progress);
+                    user.Progress = await GameLogicAsunc(rnd_point, user.Progress);
                     ui.Draw("ProgressBar");
                     ui.CheckBar(GeneratorCount, user.Progress);
 
@@ -46,11 +46,13 @@ namespace AsuncOnCore
                         Console.WriteLine("Генератор починен");
                         GeneratorCount--;
                         ui.CheckBar(GeneratorCount, user.Progress);
+                        
                         await Task.Delay(20);
                         Console.Beep();
                         await Task.Delay(20);
                         Console.Beep();
                         await Task.Delay(1800);
+                        ui.Draw("25");
                         Terminate = false;
                         break;
                     }
@@ -74,9 +76,9 @@ namespace AsuncOnCore
             }
         }
 
-        static async Task<int> GameLogicAsunc(int[] w, int[] h, int rnd_point, int progress)
+        static async Task<int> GameLogicAsunc(int rnd_point, int progress)
         {
-            int progress_ = await Task.Run(() => GameLogic(w, h, rnd_point, progress));
+            int progress_ = await Task.Run(() => GameLogic(rnd_point, progress));
             return progress_;
         }
         static async Task CheckKeyAsunc()
@@ -84,7 +86,7 @@ namespace AsuncOnCore
             await Task.Run(() => CheckKey());
         }
 
-        static async Task<int> GameLogic(int[] w, int[] h, int rnd_point, int progress)
+        private static async Task<int> GameLogic(int rnd_point, int progress)
         {
             UI ui = new UI();
             for (int i = 0; i < w.GetLength(0); i++)
@@ -109,7 +111,7 @@ namespace AsuncOnCore
                 {
                     if ((--i) == rnd_point)
                     {
-                        progress += 10;
+                        progress += 100;
                         Console.SetCursorPosition(60, 11);
                         Console.Write("ПОПАЛ");
                         ui.Draw("100");
