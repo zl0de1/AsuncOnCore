@@ -86,6 +86,7 @@ namespace AsuncOnCore
             Console.Write("Генераторов: " + generatorCount + "\n  -------------------------------");
             ui.Draw("UserIcon");
         }
+
         private static readonly string[] simbols = new string[]
             {
             "┌ ┐└ ┘├ ┤ ═ ║ ╒ ╓ ╔ ╕ ╖ ╗ ╘ ╙ ╚ ╛ ╜ ╝ ╞ ╟ ╠ ╡ ╢ ╣ ╤ ╥ ╦ ╧ ╨ ╩ ╪ ╫ ╬ ▀ ▄ █ ▌▐ ░ ▒ ▓"

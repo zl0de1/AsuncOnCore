@@ -1,6 +1,6 @@
 ﻿using System;
+using System.Threading;
 using System.Threading.Tasks;
-using System.Collections.Generic;
 
 namespace AsuncOnCore
 {
@@ -10,14 +10,16 @@ namespace AsuncOnCore
         private static int[] h = new int[] { 8, 8, 9, 10, 11, 12, 13, 14, 14, 14, 14, 13, 12, 11, 10, 9, 8, 8 };
         private int generatorCount;
         private int scores;
-        public static bool Terminate = false;
+        private int addProgress;
+        public static bool Terminate = true;
 
         //public User user { get; set; }
 
         public Game() { }
 
-        public Game(int generatorCount) 
+        public Game(int generatorCount, int addProgress)
         {
+            this.addProgress = addProgress;
             this.generatorCount = generatorCount; 
         }
 
@@ -26,7 +28,14 @@ namespace AsuncOnCore
             Random rnd = new Random();
             UI ui = new UI();
             User user = new User();
-            
+
+            for (int i = 0; i < w.GetLength(0); i++)
+            {
+                Console.SetCursorPosition(w[i], h[i]);
+                Console.Write(".");
+                Wait(60);
+            }
+            Terminate = false;
             while (GeneratorCount > 0)
             {
                 user.Progress = 0;
@@ -48,19 +57,19 @@ namespace AsuncOnCore
                         GeneratorCount--;
                         Scores += 1250;
                         ui.CheckBar(GeneratorCount, user.Progress, Scores);
-                        await Task.Delay(1000);
+                        Wait(1000);
                         ui.Draw("25");
-                        await Task.Delay(20);
+                        Wait(20);
                         Console.Beep();
-                        await Task.Delay(20);
+                        Wait(20);
                         Console.Beep();
-                        await Task.Delay(1000);
+                        Wait(1000);
                         Terminate = false;
                         break;
                     }
                     else if (user.Progress < 100)
                     {
-                        await Task.Delay(700);
+                        Wait(700);
                         Terminate = false;
                     }
                 }
@@ -91,7 +100,7 @@ namespace AsuncOnCore
         }
 
         private async Task<int> GameLogic(int rnd_point, int progress)
-        {   
+        {
             UI ui = new UI();
             for (int i = 0; i < w.GetLength(0); i++)
             {
@@ -114,7 +123,7 @@ namespace AsuncOnCore
                 {
                     if ((--i) == rnd_point)
                     {
-                        progress += 50;
+                        progress += addProgress;
                         Scores += 100;
                         Console.SetCursorPosition(60, 11);
                         Console.Write("ПОПАЛ");
@@ -145,6 +154,14 @@ namespace AsuncOnCore
                     //Console.WriteLine("CheckKey");
                     Terminate = true;
                 }
+            }
+        }
+        static void Wait(int sec)
+        {
+            Thread.Sleep(sec);
+            while (Console.KeyAvailable)
+            {
+                Console.ReadKey(true);
             }
         }
     }

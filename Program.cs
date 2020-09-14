@@ -10,10 +10,14 @@ namespace AsuncOnCore
         {
             Console.SetWindowSize(120, 30);
             Console.CursorVisible = false;
+            UI ui = new UI();
             User user = new User();
-            Game game = new Game(5);
-            //game.GeneratorCount = 1;
-            user.Scores = 1;
+
+
+
+            Console.ReadKey();
+            Game game = new Game(5, 25);
+            user.Scores = 0;
             user.Scores = await game.Play();
             
             Console.SetCursorPosition(0, 5);
