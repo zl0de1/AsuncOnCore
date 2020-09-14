@@ -8,11 +8,18 @@ namespace AsuncOnCore
     {
         string name;
         private int progress;
+        private int scores;
 
         public User() { }
         public User(string name) 
         {
 
+        }
+
+        public int Scores
+        {
+            get { return scores; }
+            set { scores = value; }
         }
 
         public int Progress

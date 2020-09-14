@@ -5,7 +5,6 @@ namespace AsuncOnCore
 {
     class UI
     {
-        static object locker = new object();
         //public Sprite sprite { get; set; }
         public UI() { }
 
@@ -44,31 +43,31 @@ namespace AsuncOnCore
             }
         }
 
-        private void DrawAddSprite(object sprite) 
-            //параметрезированный поток в качестве параметра 
-            //может принимать объект типа object, по мне так херь
+        private void DrawAddSprite(object sprite)
         {
+            //параметрезированный поток в качестве параметра 
+            //может принимать только объект типа object, по мне так херь какая-то
             string[] sprite_ = (string[])sprite;
-            Console.SetCursorPosition(0, 11);
             for (int i = 0; i < sprite_.GetLength(0); i++)
             {
+                Console.SetCursorPosition(0, 11+i);
                 Console.Write(sprite_[i] + "\n");
                 Thread.Sleep(90);
             }
-            Thread.Sleep(400);
-            Console.SetCursorPosition(0, 11);
+            Thread.Sleep(600);
             for (int i = 0; i < sprite_.GetLength(0); i++)
             {
+                Console.SetCursorPosition(0, 11+i);
                 for (int n = 0; n < sprite_[i].Length; n++)
                 {
                     Console.Write(" ");
                 }
-                Thread.Sleep(100);
+                Thread.Sleep(90);
                 Console.Write("\n");
             }
         }
 
-        public void CheckBar(int generatorCount, int progress)
+        public void CheckBar(int generatorCount, int progress, int scores)
         {
             UI ui = new UI();
             Console.SetCursorPosition(70, 16);
@@ -81,22 +80,27 @@ namespace AsuncOnCore
                     Console.Write("■");
                 }
             }
-            Console.SetCursorPosition(10, 23);
-            Console.Write("Генераторов починить: " + generatorCount + "\n  -------------------------------");
+            Console.SetCursorPosition(2, 23);
+            Console.Write("scores: " + scores);
+            Console.SetCursorPosition(19, 23);
+            Console.Write("Генераторов: " + generatorCount + "\n  -------------------------------");
             ui.Draw("UserIcon");
         }
-
+        private static readonly string[] simbols = new string[]
+            {
+            "┌ ┐└ ┘├ ┤ ═ ║ ╒ ╓ ╔ ╕ ╖ ╗ ╘ ╙ ╚ ╛ ╜ ╝ ╞ ╟ ╠ ╡ ╢ ╣ ╤ ╥ ╦ ╧ ╨ ╩ ╪ ╫ ╬ ▀ ▄ █ ▌▐ ░ ▒ ▓"
+            };
         private static readonly string[] Add25 = new string[]
             {
-            "   ■    ■■■ ■■■ ■■■",
-            " ■■■■■  ■■■ ■ ■ ■ ■",
-            "   ■    ■■■ ■■■ ■■■",
+            "   ■   █ ▀▀█ █▀▀ █▀█ ",
+            " ■■■■■ █ █▀▀ ▀▀█ █ █ ",
+            "   ■   █ █▄▄ ▄▄█ █▄█ ",
             };
         private static readonly string[] Add100 = new string[]
             {
-            "   ■    ■ ■■■ ■■■",
-            " ■■■■■  ■ ■ ■ ■ ■",
-            "   ■    ■ ■■■ ■■■",
+            "   ■    █ █▀█ █▀█ ",
+            " ■■■■■  █ █ █ █ █ ",
+            "   ■    █ █▄█ █▄█ ",
             };
         private static readonly string[] ProgressBarSprite = new string[]
         {
@@ -106,10 +110,10 @@ namespace AsuncOnCore
         };
         private static readonly string[] UserIcon = new string[]
         {
-            " ■■■ ",
-            " ■■■ ",
-            "  ■  ",
-            "■■■■■",
+            " ▄▄▄ ",
+            " ███ ",
+            "  ▀  ",
+            "▀▀▀▀▀",
         };
     }
 }

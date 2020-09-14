@@ -9,9 +9,10 @@ namespace AsuncOnCore
         private static int[] w = new int[] { 63, 65, 66, 67, 67, 67, 66, 65, 63, 61, 59, 58, 57, 57, 57, 58, 59, 61 };
         private static int[] h = new int[] { 8, 8, 9, 10, 11, 12, 13, 14, 14, 14, 14, 13, 12, 11, 10, 9, 8, 8 };
         private int generatorCount;
+        private int scores;
         public static bool Terminate = false;
 
-        public User user { get; set; }
+        //public User user { get; set; }
 
         public Game() { }
 
@@ -20,7 +21,7 @@ namespace AsuncOnCore
             this.generatorCount = generatorCount; 
         }
 
-        public async Task Play()
+        public async Task<int> Play()
         {
             Random rnd = new Random();
             UI ui = new UI();
@@ -30,14 +31,14 @@ namespace AsuncOnCore
             {
                 user.Progress = 0;
                 ui.Draw("ProgressBar");
-                ui.CheckBar(GeneratorCount, user.Progress);
+                ui.CheckBar(GeneratorCount, user.Progress, Scores);
                 while (!Terminate)
                 {
                     CheckKeyAsunc(); //??
                     int rnd_point = rnd.Next(4, (w.GetLength(0) - 1));
                     user.Progress = await GameLogicAsunc(rnd_point, user.Progress);
                     ui.Draw("ProgressBar");
-                    ui.CheckBar(GeneratorCount, user.Progress);
+                    ui.CheckBar(GeneratorCount, user.Progress, Scores);
 
                     if (user.Progress >= 100)
                     {
@@ -45,14 +46,15 @@ namespace AsuncOnCore
                         Console.SetCursorPosition(0, 0);
                         Console.WriteLine("Генератор починен");
                         GeneratorCount--;
-                        ui.CheckBar(GeneratorCount, user.Progress);
-                        
-                        await Task.Delay(20);
-                        Console.Beep();
-                        await Task.Delay(20);
-                        Console.Beep();
-                        await Task.Delay(1800);
+                        Scores += 1250;
+                        ui.CheckBar(GeneratorCount, user.Progress, Scores);
+                        await Task.Delay(1000);
                         ui.Draw("25");
+                        await Task.Delay(20);
+                        Console.Beep();
+                        await Task.Delay(20);
+                        Console.Beep();
+                        await Task.Delay(1000);
                         Terminate = false;
                         break;
                     }
@@ -63,8 +65,10 @@ namespace AsuncOnCore
                     }
                 }
             }
+            return Scores;
         }
 
+        public int Scores { get; set; }
         public int GeneratorCount
         {
             get { return generatorCount; }
@@ -76,7 +80,7 @@ namespace AsuncOnCore
             }
         }
 
-        static async Task<int> GameLogicAsunc(int rnd_point, int progress)
+        async Task<int> GameLogicAsunc(int rnd_point, int progress)
         {
             int progress_ = await Task.Run(() => GameLogic(rnd_point, progress));
             return progress_;
@@ -86,12 +90,11 @@ namespace AsuncOnCore
             await Task.Run(() => CheckKey());
         }
 
-        private static async Task<int> GameLogic(int rnd_point, int progress)
-        {
+        private async Task<int> GameLogic(int rnd_point, int progress)
+        {   
             UI ui = new UI();
             for (int i = 0; i < w.GetLength(0); i++)
             {
-                //Console.Clear();
                 for (int a = 0; a < w.GetLength(0); a++)
                 {
                     Console.SetCursorPosition(w[a], h[a]);
@@ -111,13 +114,13 @@ namespace AsuncOnCore
                 {
                     if ((--i) == rnd_point)
                     {
-                        progress += 100;
+                        progress += 50;
+                        Scores += 100;
                         Console.SetCursorPosition(60, 11);
                         Console.Write("ПОПАЛ");
                         ui.Draw("100");
                         Console.Beep();
                         return progress;
-                        //break;
                     }
                     else
                     {
@@ -125,7 +128,6 @@ namespace AsuncOnCore
                         Console.SetCursorPosition(60, 11);
                         Console.Write("МИМО ");
                         return progress;
-                        //break;
                     }
                 }
             }
