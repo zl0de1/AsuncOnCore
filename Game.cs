@@ -11,7 +11,7 @@ namespace AsuncOnCore
         private int generatorCount;
         private int scores;
         private int addProgress;
-        public static bool Terminate = true;
+        public static bool Terminate = false;
 
         //public User user { get; set; }
 
@@ -35,7 +35,6 @@ namespace AsuncOnCore
                 Console.Write(".");
                 Wait(60);
             }
-            Terminate = false;
             while (GeneratorCount > 0)
             {
                 user.Progress = 0;

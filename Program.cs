@@ -8,14 +8,15 @@ namespace AsuncOnCore
     { 
         static async Task Main()
         {
-            Console.SetWindowSize(120, 30);
+            //Dont working on Mac OS platpform
+            //Console.SetWindowSize(120, 30);
             Console.CursorVisible = false;
             UI ui = new UI();
             User user = new User();
 
-
-
+            ui.Draw("MenuSprite");
             Console.ReadKey();
+            Console.Clear();
             Game game = new Game(5, 25);
             user.Scores = 0;
             user.Scores = await game.Play();

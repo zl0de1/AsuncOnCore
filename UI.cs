@@ -39,7 +39,18 @@ namespace AsuncOnCore
                         }
                     }
                     break;
-                        
+                case "MenuSprite":
+                    for (int n = 0; n < MenuSprite.GetLength(0); n++)
+                    {
+                        //Console.Clear();
+                        for (int i = 0; i < n+1; i++)
+                        {
+                            Console.SetCursorPosition(27, (27 - n));
+                            Console.Write(MenuSprite[i]);
+                        }
+                        Thread.Sleep(200);
+                    }
+                    break;
             }
         }
 
@@ -116,5 +127,17 @@ namespace AsuncOnCore
             "  ▀  ",
             "▀▀▀▀▀",
         };
+        private static readonly string[] MenuSprite = new string[]
+        {
+            "╔═══════════╗    ╔═══════════╗    ╔═══════════╗    ╔═══════════╗",
+            "║     x     ║    ║    ▄║▄    ║    ║           ║    ║           ║",
+            "║   .   o   ║    ║   █ ║ ▀   ║    ║  ▀ ════   ║    ║   ▄▀▀▀▄   ║",
+            "║     .     ║    ║    ▀║▀▄   ║    ║  ▀ ════   ║    ║  █ ▀▄  █  ║",
+            "║    ▄▄▄    ║    ║   ▀▄║▄▀   ║    ║  ▀ ════   ║    ║  ▀▄  ▀▄▀  ║",
+            "║ ══        ║    ║     ║     ║    ║           ║    ║    ▀▀▀    ║",
+            "╚═══════════╝    ╚═══════════╝    ╚═══════════╝    ╚═══════════╝",
+            "  Новая игра        Магазин         Сатистика          Выход",
+        };
+
     }
 }
